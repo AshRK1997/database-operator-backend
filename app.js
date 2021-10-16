@@ -6,12 +6,13 @@ var logger = require('morgan');
 require('dotenv').config();
 const chalk = require('chalk');
 
+var cors = require('cors')
+
 
 var getDbDataRouter = require('./routes/getDbData');
 
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -20,6 +21,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors())
 
 app.use('/get/db', getDbDataRouter);
 
