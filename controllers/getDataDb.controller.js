@@ -17,7 +17,25 @@ const getDataDb = async(req, res, next) => {
     
         await client.end();
         console.log("client closed")
-        res.send({ success: true, data: result?.rows });
+        let data = result?.rows || [];
+        let keys = Object.keys(data[0]);
+
+        for (let i = 0; i < data?.length; i++){
+            let obj = {...data[i]}
+            for (let key=0; key < keys?.length; key++){
+                console.log("obj[keys[key]]", data[i][keys[key]])
+                if (typeof obj[keys[key]] === 'object' && obj[keys[key]] !== null  && obj[keys[key]] !== undefined && new Date(obj[keys[key]]).toString() === 'Invalid Date') {
+                    
+                    data[i][keys[key]] = JSON.stringify(obj[keys[key]])
+                    console.log("Json stringified", obj[keys[key]]);
+                }
+            }
+
+        }
+
+        console.log("obj[keys[key]]", data)
+
+        res.send({ success: true, data: data });
     
       } catch (e) {
         res.send({ success: false, error: e.message });
